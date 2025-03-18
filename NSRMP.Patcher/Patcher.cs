@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Runtime.InteropServices;
+using BepInEx;
 using Mirror.Weaver;
 using Mono.Cecil;
 
@@ -27,27 +28,45 @@ public class BepInExLogger : Logger
     }
 }
 
-public class Patcher
+public static class Patcher
 {
     public static IEnumerable<string> TargetDLLs { get; } = ["Assembly-CSharp.dll"];
 
-    public static void Patch(AssemblyDefinition assembly)
+    private static void WeaveAssembly(string assemblyPath)
     {
-        using (var asmResolver = new DefaultAssemblyResolver())
+        using var asmResolver = new DefaultAssemblyResolver();
+
+        foreach (var dir in Directory.GetDirectories(RuntimeEnvironment.GetRuntimeDirectory(), "*",
+                     SearchOption.AllDirectories))
         {
-            asmResolver.AddSearchDirectory(Paths.ManagedPath);
-            asmResolver.AddSearchDirectory(Path.Combine(Paths.PluginPath, "NSRMP", "Dependencies"));
-            asmResolver.AddSearchDirectory(Paths.BepInExAssemblyDirectory);
+            asmResolver.AddSearchDirectory(dir);
+        }
 
-            var weaver = new Weaver(new BepInExLogger());
-            Console.WriteLine(weaver.Weave(assembly, asmResolver, out var modified)
-                ? "Weaver complete!"
-                : "ERROR: Weaver failed!");
+        asmResolver.AddSearchDirectory(Path.Combine(Paths.PluginPath, "NSRMP", "Dependencies"));
+        asmResolver.AddSearchDirectory(Path.Combine(Paths.PluginPath, "MMHOOK"));
+        asmResolver.AddSearchDirectory(Paths.ManagedPath);
+        asmResolver.AddSearchDirectory(Paths.BepInExAssemblyDirectory);
 
-            if (modified)
-            {
-                assembly.Write(new WriterParameters() { WriteSymbols = true });
-            }
+        using var modAssembly = AssemblyDefinition.ReadAssembly(assemblyPath,
+            new ReaderParameters { AssemblyResolver = asmResolver });
+
+        var weaver = new Weaver(new BepInExLogger());
+        Console.WriteLine(weaver.Weave(modAssembly, asmResolver, out var modified)
+            ? "Weaver complete!"
+            : "ERROR: Weaver failed!");
+
+        if (modified)
+        {
+            Console.WriteLine("Writing to assembly. . .");
+            modAssembly.Write(new WriterParameters { WriteSymbols = true });
         }
     }
+    
+    public static void Finish()
+    {
+        WeaveAssembly(Path.Combine(Paths.ManagedPath, "Assembly-CSharp.dll"));
+        WeaveAssembly(Path.Combine(Paths.PluginPath, "NSRMP", "NSRMP.dll"));
+    }
+    
+    public static void Patch(AssemblyDefinition assembly) {}
 }

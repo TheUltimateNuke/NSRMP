@@ -12,6 +12,9 @@
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>
         <RootNamespace>$(AssemblyName)</RootNamespace>
+
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>

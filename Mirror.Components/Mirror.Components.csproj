@@ -36,5 +36,6 @@
         </PropertyGroup>
 
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsFolder)/Dependencies" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/$(AssemblyName).pdb" DestinationFolder="$(PluginsFolder)/Dependencies" />
     </Target>
 </Project>

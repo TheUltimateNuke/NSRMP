@@ -10,10 +10,12 @@
             https://nuget.bepinex.dev/v3/index.json;
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>
+        
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All"/>
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.29" />
         <PackageReference Include="BepInEx.Core" Version="5.*" />
         <PackageReference Include="System.ValueTuple" Version="4.4.0" />
@@ -36,6 +38,7 @@
         </PropertyGroup>
 
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsFolder)/Dependencies" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/$(AssemblyName).pdb" DestinationFolder="$(PluginsFolder)/Dependencies" />
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/Mirror.BouncyCastle.Cryptography.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/System.ValueTuple.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
     </Target>

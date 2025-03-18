@@ -12,6 +12,9 @@
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>
         <RootNamespace>$(AssemblyName)</RootNamespace>
+        
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,6 +25,8 @@
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
         
         <ProjectReference Include="$(SolutionDir)/Mirror/Mirror.csproj" />
+        
+        <Reference Include="References/**/*.dll" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,5 +43,6 @@
         </PropertyGroup>
 
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsFolder)" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/$(AssemblyName).pdb" DestinationFolder="$(PluginsFolder)" />
     </Target>
 </Project>

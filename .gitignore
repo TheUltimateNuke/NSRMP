@@ -404,3 +404,7 @@ riderModule.iml
 
 game_dir.txt
 .idea
+
+NSRMP/References
+!NSRMP/References/README.txt
+!NSRMP/References/MMHOOK
