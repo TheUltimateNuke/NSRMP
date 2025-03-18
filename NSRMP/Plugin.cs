@@ -16,12 +16,6 @@ public class Plugin : BaseUnityPlugin
     {
         Assembly.GetExecutingAssembly().GetType("Mirror.GeneratedNetworkCode")?.GetMethod("InitReadWriters")?.Invoke(null, null);
 
-        On.GameContext.Awake += OnGameContextAwake;
-        Debug.Log("NSRMP plugin loaded OK!");
-    }
-
-    private void OnGameContextAwake(On.GameContext.orig_Awake orig, GameContext self)
-    {
         SingletonContainer = new GameObject("NSRMP_SingletonContainer");
         DontDestroyOnLoad(SingletonContainer);
 
@@ -29,5 +23,7 @@ public class Plugin : BaseUnityPlugin
         var networkManager = SingletonContainer.AddComponent<NetworkManager>();
         networkManager.dontDestroyOnLoad = true;
         SingletonContainer.AddComponent<NetworkManagerHUD>();
+        Debug.Log("NSRMP plugin loaded OK!");
     }
+
 }
