@@ -1,5 +1,6 @@
 using System.Reflection;
 using BepInEx;
+using HarmonyLib;
 using kcp2k;
 using Mirror;
 using UnityEngine;
@@ -13,18 +14,20 @@ public class Plugin : BaseUnityPlugin
     
     private void Awake()
     {
-        Assembly.GetExecutingAssembly().GetType("Mirror.GeneratedNetworkCode").GetMethod("InitReadWriters")?.Invoke(null, null);
-        
-        CommonEvents.OnGameContextAwake += OnGameContextAwake;
+        Assembly.GetExecutingAssembly().GetType("Mirror.GeneratedNetworkCode")?.GetMethod("InitReadWriters")?.Invoke(null, null);
+
+        On.GameContext.Awake += OnGameContextAwake;
+        Debug.Log("NSRMP plugin loaded OK!");
     }
 
-    private void OnGameContextAwake()
+    private void OnGameContextAwake(On.GameContext.orig_Awake orig, GameContext self)
     {
         SingletonContainer = new GameObject("NSRMP_SingletonContainer");
         DontDestroyOnLoad(SingletonContainer);
 
         SingletonContainer.AddComponent<KcpTransport>();
-        SingletonContainer.AddComponent<NetworkManager>();
+        var networkManager = SingletonContainer.AddComponent<NetworkManager>();
+        networkManager.dontDestroyOnLoad = true;
         SingletonContainer.AddComponent<NetworkManagerHUD>();
     }
 }
