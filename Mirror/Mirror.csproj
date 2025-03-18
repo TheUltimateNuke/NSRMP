@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net462</TargetFramework>
+        <Version>96.2.1</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>12</LangVersion>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.29" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+
+        <Reference Include="References/**/UnityEngine.UI.dll" />
+        <Reference Include="References/**/Mirror.BouncyCastle.Cryptography.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <GameDirFilePath Include="$(SolutionDir)/game_dir.txt"/>
+    </ItemGroup>
+    
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <ReadLinesFromFile File="@(GameDirFilePath)">
+            <Output TaskParameter="Lines" PropertyName="GameDir" />
+        </ReadLinesFromFile>
+
+        <PropertyGroup>
+            <PluginsFolder>$(GameDir)/BepInEx/plugins/$(SolutionName)</PluginsFolder>
+        </PropertyGroup>
+
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsFolder)/Dependencies" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/Mirror.BouncyCastle.Cryptography.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/System.ValueTuple.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
+    </Target>
+</Project>

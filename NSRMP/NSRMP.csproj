@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net462</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.29" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+        
+        <ProjectReference Include="$(SolutionDir)/Mirror/Mirror.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <GameDirFilePath Include="$(SolutionDir)/game_dir.txt"/>
+    </ItemGroup>
+    
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <ReadLinesFromFile File="@(GameDirFilePath)">
+            <Output TaskParameter="Lines" PropertyName="GameDir" />
+        </ReadLinesFromFile>
+
+        <PropertyGroup>
+            <PluginsFolder>$(GameDir)/BepInEx/plugins/$(SolutionName)</PluginsFolder>
+        </PropertyGroup>
+
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsFolder)" />
+    </Target>
+</Project>
