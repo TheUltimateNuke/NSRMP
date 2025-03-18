@@ -31,8 +31,3 @@ public class Plugin : BaseUnityPlugin
         SingletonContainer.AddComponent<NetworkManagerHUD>();
     }
 }
-
-public static class CommonEvents
-{
-    public static Action? OnGameContextAwake;
-}
