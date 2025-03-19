@@ -19,6 +19,7 @@
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.29" />
         <PackageReference Include="BepInEx.Core" Version="5.*" />
         <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+        <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
 
         <Reference Include="References/**/UnityEngine.UI.dll" />
         <Reference Include="References/**/Mirror.BouncyCastle.Cryptography.dll" />
@@ -41,5 +42,6 @@
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/$(AssemblyName).pdb" DestinationFolder="$(PluginsFolder)/Dependencies" />
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/Mirror.BouncyCastle.Cryptography.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
         <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/System.ValueTuple.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
+        <Copy Condition="'$(GameDir)' != ''" SourceFiles="$(TargetDir)/System.Runtime.InteropServices.RuntimeInformation.dll" DestinationFolder="$(PluginsFolder)/Dependencies" />
     </Target>
 </Project>

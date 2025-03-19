@@ -26,19 +26,16 @@ public class Plugin : BaseUnityPlugin
         SingletonContainer.AddComponent<KcpTransport>();
         var networkManager = SingletonContainer.AddComponent<NetworkManager>();
         networkManager.dontDestroyOnLoad = true;
+        networkManager.onlineScene = "worldGenerated";
         SingletonContainer.AddComponent<NetworkManagerHUD>();
         NetworkManager = networkManager;
-        Debug.Log("NSRMP plugin loaded OK!");
+        Debug.Log("NSRMP plugin loaded OK! huzzah");
         
-        ActorModel.Init += ActorModelOnInit;
+        On.MonomiPark.SlimeRancher.DataModel.GameModel.RegisterActor += GameModelOnRegisterActor;
     }
 
-    private void ActorModelOnInit(ActorModel.orig_Init orig, MonomiPark.SlimeRancher.DataModel.ActorModel self, GameObject gameobj)
+    private void GameModelOnRegisterActor(GameModel.orig_RegisterActor orig, MonomiPark.SlimeRancher.DataModel.GameModel self, long actorid, GameObject gameobj, RegionRegistry.RegionSetId regionsetid, bool nonactorok, bool skipnotify)
     {
-        if (NetworkManager == null || !NetworkManager.isNetworkActive || !gameobj) return;
         
-        var identity = gameobj.GetComponent<NetworkIdentity>() ?? gameobj.AddComponent<NetworkIdentity>();
-        var transform = gameobj.GetComponent<NetworkTransformUnreliable>() ?? gameobj.AddComponent<NetworkTransformUnreliable>();
-        // TODO If object has SlimeEmotions component, sync SlimeEmotions.currVal
     }
 }

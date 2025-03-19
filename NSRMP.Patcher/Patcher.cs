@@ -48,7 +48,7 @@ public static class Patcher
         asmResolver.AddSearchDirectory(Paths.BepInExAssemblyDirectory);
 
         using var modAssembly = AssemblyDefinition.ReadAssembly(assemblyPath,
-            new ReaderParameters { AssemblyResolver = asmResolver });
+            new ReaderParameters { AssemblyResolver = asmResolver, ReadWrite = true });
 
         var weaver = new Weaver(new BepInExLogger());
         Console.WriteLine(weaver.Weave(modAssembly, asmResolver, out var modified)
@@ -58,7 +58,7 @@ public static class Patcher
         if (modified)
         {
             Console.WriteLine("Writing to assembly. . .");
-            modAssembly.Write(new WriterParameters { WriteSymbols = true });
+            modAssembly.Write();
         }
     }
     

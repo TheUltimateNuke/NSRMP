@@ -23,11 +23,12 @@
         <PackageReference Include="BepInEx.Core" Version="5.*" />
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" />
 
         <ProjectReference Include="$(SolutionDir)/Mirror/Mirror.csproj" />
         <ProjectReference Include="$(SolutionDir)/Mirror.Components/Mirror.Components.csproj" />
         
-        <Reference Include="References/**/*.dll" />
+        <Reference Include="References/**/*.dll" Publicize="true" />
     </ItemGroup>
 
     <ItemGroup>
